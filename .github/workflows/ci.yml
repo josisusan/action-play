@@ -28,7 +28,6 @@ jobs:
         id: main_version
         run: |
           VERSION=$(cat ./.version)
-          echo $VERSION
           echo "::set-output name=name::$VERSION"
       
       - name: Print out the version from main branch
@@ -40,7 +39,6 @@ jobs:
         id: current_version
         run: |
           VERSION=$(cat ./.version)
-          echo $VERSION
           echo "::set-output name=name::$VERSION"
       
       - name: Print out the version from current branch
