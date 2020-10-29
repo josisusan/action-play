@@ -48,7 +48,7 @@ jobs:
         run: |
           MAIN_VERSION=${{ steps.main_version.outputs.name }}
           CURR_VERSION=${{ steps.current_version.outputs.name }}
-          if [ "$(printf '%s\n' "$CURR_VERSION" "$MAIN_VERSION" | sort -V | head -n1)" = "$MAIN_VERSION" ]; then 
+          if [ "$(printf '%s\n' "$CURR_VERSION" "$MAIN_VERSION" | sort -V | tail -n1)" = "$MAIN_VERSION" ]; then 
             echo "Please change the version"
           else
             echo "Its fine"
