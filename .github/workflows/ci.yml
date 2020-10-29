@@ -19,6 +19,7 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR_COMMENT_URL: ${{ github.event.pull_request.comments_url }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
