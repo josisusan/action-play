@@ -31,7 +31,7 @@ jobs:
           echo "::set-output name=name::$VERSION"
       
       - name: Print out the version from main branch
-        run: echo ${{ steps.main_version.output.name }}
+        run: echo ${{ steps.main_version.outputs.name }}
       
       - uses: actions/checkout@v2
 
@@ -42,7 +42,7 @@ jobs:
           echo "::set-output name=name::$VERSION"
       
       - name: Print out the version from current branch
-        run: echo ${{ steps.current_version.output.name }}
+        run: echo ${{ steps.current_version.outputs.name }}
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
