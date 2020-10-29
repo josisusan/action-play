@@ -21,6 +21,17 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          ref: 'main'
+      
+      - name: Get version from main branch
+        id: main_version
+        run: |
+          VERSION=$(cat ./.version)
+          echo "::set-output name=name::$VERSION"
+      
+      - name: Print out the version from main branch
+        run: echo "Version in main = ${{ steps.main_version.output.name }}"
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
