@@ -17,10 +17,57 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR_COMMENT_URL: ${{ github.event.pull_request.comments_url }}
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          ref: 'main'
+      
+      - name: Get version from main branch
+        id: main_version
+        run: |
+          VERSION=$(cat ./.version)
+          echo "::set-output name=name::$VERSION"
+      
+      - name: Print out the version from main branch
+        run: echo ${{ steps.main_version.outputs.name }}
+      
+      - uses: actions/checkout@v2
+
+      - name: Get version from current branch
+        id: current_version
+        run: |
+          VERSION=$(cat ./.version)
+          echo "::set-output name=name::$VERSION"
+      
+      - name: Print out the version from current branch
+        run: echo ${{ steps.current_version.outputs.name }}
+      
+      - name: Compare the version
+        id: version_check
+        run: |
+          MAIN_VERSION=${{ steps.main_version.outputs.name }}
+          CURR_VERSION=${{ steps.current_version.outputs.name }}
+          if [ "$(printf '%s\n' "$CURR_VERSION" "$MAIN_VERSION" | sort -V | tail -n1)" = "$MAIN_VERSION" ]; then 
+            echo "::set-output name=flag::1"
+          else
+            echo "::set-output name=flag::0"
+          fi
+
+      - name: Post Version Status Info to PR
+        if: ${{ steps.version_check.outputs.flag == '1' }}
+        run: |
+          curl \
+          -X POST \
+          $PR_COMMENT_URL \
+          -H "Content-Type: application/vnd.github.v3.raw+json " \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          --data '{"body": "Please change your version name. Currently, the master branch has version tagged as ${{ steps.main_version.outputs.name }}"}'
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
