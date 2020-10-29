@@ -43,6 +43,16 @@ jobs:
       
       - name: Print out the version from current branch
         run: echo ${{ steps.current_version.outputs.name }}
+      
+      - name: Compare the version
+        run: |
+          MAIN_VERSION=${{ steps.main_version.outputs.name }}
+          CURR_VERSION=${{ steps.current_version.outputs.name }}
+          if [ "$(printf '%s\n' "$MAIN_VERSION" "$CURR_VERSION" | sort -V | head -n1)" = "$MAIN_VERSION" ]; then 
+            echo "Please change the version"
+          else
+            echo "Its fine"
+          fi
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
