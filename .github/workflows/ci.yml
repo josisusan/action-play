@@ -19,7 +19,6 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PR_COMMENT_URL: ${{ github.event.pull_request.comments_url }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -35,11 +34,14 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-      - name: Comment
-        run: |
-          curl \
-          -X POST \
-          $PR_COMMENT_URL \
-          -H "Content-Type: application/vnd.github.v3.raw+json " \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          --data '{"body": "Hello World 2!!"}'
+
+      - uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 Thanks for reporting!'
+            })
