@@ -42,4 +42,4 @@ jobs:
           $PR_COMMENT_URL \
           -H "Content-Type: application/vnd.github.v3.raw+json " \
           -H "Authorization: token $GITHUB_TOKEN" \
-          --data '{"body": "Hello World!!"}'
+          --data '{"body": "Hello World 2!!"}'
